@@ -4,8 +4,14 @@ const lengthSlider = document.querySelector(".pass-length .rag "),
   options = document.querySelectorAll(".options input"),
   PassIndicator = document.querySelector(".pass-indicator"),
   copyIcon = document.querySelector(".input-box span"),
+  icon = document.querySelector(".history ol li span"),
   passwordInput = document.querySelector(".input-box input"),
-  generateBtn = document.querySelector(".generate-btn");
+  generateBtn = document.querySelector(".generate-btn"),
+  historyBtn = document.getElementById("hist"),
+  Controls = document.querySelector(".controls"),
+  history = document.querySelector(".history");
+
+const arr = [];
 
 const characters = {
   lowercase: "abcdefghijklmnopqrstuvwxyz",
@@ -53,10 +59,29 @@ const generatePassword = () => {
     }
   }
   passwordInput.value = randomPassword;
+
+  arr.push(passwordInput.value);
+
+  // Create DOM element
+  // Set content to current element
+  let childNode = document.createElement("li");
+  document.querySelector(".history ol").appendChild(childNode);
+
+    // var icon = document.createElement("span");
+    // icon.className = "material-symbols-rounded";
+    // icon.innerText = "copy_all";
+    // document.querySelector(".history ol").appendChild(icon);
+    // <i class="fa-solid fa-trash"></i>
+
+  // childNode.innerHTML = arr[arr.length-1]; //first method
+  while (arr.length) {
+    childNode.innerHTML = arr.pop(); //second method
+    arr.pop();
+  }
 };
 
 const updateSlide = () => {
-  document.querySelector(".header span").innerHTML = lengthSlider.value 
+  document.querySelector(".header span").innerHTML = lengthSlider.value;
   updatePassIndicator();
   generatePassword();
 };
@@ -76,13 +101,25 @@ function syncCharacterAmount(e) {
   const value = e.target.value;
   characterAmountNumber.value = value;
   characterAmountRange.value = value;
-  document.querySelector(".header span").innerHTML = value 
+
+  function limiter(input) {
+    if (input.value < 0) input.value = 0;
+    if (input.value > 30) input.value = 30;
+  }
+
+  if (characterAmountNumber.value > 30) {
+    document.querySelector(".header span").innerHTML = 30;
+  } else {
+    document.querySelector(".header span").innerHTML = value;
+  }
+
   updatePassIndicator();
-  generatePassword();
+  // generatePassword();
+  limiter(characterAmountNumber);
 }
 
-
 copyIcon.addEventListener("click", copyPassword);
+// icon.addEventListener("click", clearPassword);
 // lengthSlider.addEventListener("input", updateSlide);
 
 characterAmountRange.addEventListener(
@@ -97,3 +134,13 @@ characterAmountNumber.addEventListener(
 );
 
 generateBtn.addEventListener("click", generatePassword);
+generateBtn.addEventListener("click", () => {
+  copyIcon.classList.toggle("scaleAnimation");
+});
+
+historyBtn.addEventListener("click", () => {
+  Controls.classList.toggle("hide");
+  history.classList.toggle("show");
+
+  // historyBtn.innerText = 'Control'
+});
