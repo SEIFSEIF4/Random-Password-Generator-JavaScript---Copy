@@ -1,2 +1,2 @@
-# Random-Password-Generator-JavaScript
+# Random Password Generator
 
